@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MSF Haritha Kozhikode District Committee - C.H. Anusmaranam Official Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900 min-h-screen flex flex-col antialiased">
+    <div id="root" class="flex-grow flex flex-col"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useMemo } = React;
+
+        const IconUser = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>);
+        const IconPhone = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg>);
+        const IconShield = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>);
+        const IconSearch = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>);
+        const IconDownload = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>);
+        const IconUpload = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg>);
+        const IconAward = () => (<svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 15l-3.518 1.85.672-3.918L6.38 10.15l3.945-.573L12 6l1.675 3.577 3.945.573-2.774 2.782.672 3.918L12 15z"/></svg>);
+        const IconLogOut = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>);
+        const IconEdit = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>);
+        const IconCheckCircle = () => (<svg className="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>);
+        const IconPlus = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4"/></svg>);
+        const IconTrash = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>);
+        const IconCamera = () => (<svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path strokeLinecap="round" strokeLinejoin="round" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>);
+        const IconShare = () => (<svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/></svg>);
+
+        const CONSTITUENCIES = [
+            'Vadakara',
+            'Kuttiady',
+            'Nadapuram',
+            'Koyilandy',
+            'Perambra',
+            'Balussery',
+            'Elathur',
+            'Kozhikode North',
+            'Kozhikode South',
+            'Beypore',
+            'Kunnamangalam',
+            'Koduvally',
+            'Thiruvambady'
+        ];
+
+        const INITIAL_REGISTRATIONS = {json.dumps(records)};
+
+        const DEFAULT_EVENT_CONFIG = {
+            title: 'MSF Haritha Kozhikode District Committee - സി എച്ച് അനുസ്മരണം',
+            subtitle: '2026 September 27 Sunday 09 AM • League House Kozhikode',
+            venue: 'League House Kozhikode',
+            imageUrl: '{banner_b64}'
+        };
+
+        const DEFAULT_CUSTOM_QUESTIONS = [
+            { id: 'cq_1', label: 'T-Shirt Size', type: 'dropdown', options: 'S, M, L, XL, XXL', required: true },
+            { id: 'cq_2', label: 'Dietary Preference', type: 'dropdown', options: 'Vegetarian, Non-Vegetarian, Vegan', required: false }
+        ];
+
+        function App() {
+            const [activeTab, setActiveTab] = useState('register');
+            const [registrations, setRegistrations] = useState(() => {
+                const saved = localStorage.getItem('summit_registrations_2026');
+                return saved ? JSON.parse(saved) : INITIAL_REGISTRATIONS;
+            });
+
+            const [eventConfig, setEventConfig] = useState(() => {
+                const saved = localStorage.getItem('summit_event_config_2026');
+                return saved ? JSON.parse(saved) : DEFAULT_EVENT_CONFIG;
+            });
+
+            const [customQuestions, setCustomQuestions] = useState(() => {
+                const saved = localStorage.getItem('summit_custom_questions_2026');
+                return saved ? JSON.parse(saved) : DEFAULT_CUSTOM_QUESTIONS;
+            });
+
+            const [photoConfig, setPhotoConfig] = useState(() => {
+                const saved = localStorage.getItem('summit_photo_config_2026');
+                return saved ? saved : 'optional';
+            });
+
+            const [enableNotifications, setEnableNotifications] = useState(() => {
+                const saved = localStorage.getItem('summit_enable_notifications_2026');
+                return saved !== null ? JSON.parse(saved) : true;
+            });
+
+            const [authorizedAdmins, setAuthorizedAdmins] = useState(() => {
+                const saved = localStorage.getItem('summit_authorized_admins_2026');
+                return saved ? JSON.parse(saved) : ['muhammadnishan2006@gmail.com', 'muslimyouthleagueclt@gmail.com', 'admin@summit2026.org'];
+            });
+
+            const [toast, setToast] = useState(null);
+
+            const showToast = (message, type = 'success') => {
+                setToast({ message, type });
+                setTimeout(() => setToast(null), 4000);
+            };
+
+            useEffect(() => {
+                localStorage.setItem('summit_registrations_2026', JSON.stringify(registrations));
+            }, [registrations]);
+
+            useEffect(() => {
+                localStorage.setItem('summit_event_config_2026', JSON.stringify(eventConfig));
+            }, [eventConfig]);
+
+            useEffect(() => {
+                localStorage.setItem('summit_custom_questions_2026', JSON.stringify(customQuestions));
+            }, [customQuestions]);
+
+            useEffect(() => {
+                localStorage.setItem('summit_photo_config_2026', photoConfig);
+            }, [photoConfig]);
+
+            useEffect(() => {
+                localStorage.setItem('summit_enable_notifications_2026', JSON.stringify(enableNotifications));
+            }, [enableNotifications]);
+
+            useEffect(() => {
+                localStorage.setItem('summit_authorized_admins_2026', JSON.stringify(authorizedAdmins));
+            }, [authorizedAdmins]);
+
+            const handleShareSiteLink = () => {
+                const currentUrl = window.location.href;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(currentUrl).then(() => {
+                        showToast('Official public site link copied to clipboard!', 'success');
+                    }).catch(() => {
+                        showToast(`Site Link: ${currentUrl}`, 'info');
+                    });
+                } else {
+                    showToast(`Site Link: ${currentUrl}`, 'info');
+                }
+            };
+
+            return (
+                <div className="min-h-screen flex flex-col bg-gradient-to-br from-indigo-50/50 via-slate-50 to-purple-50/50">
+                    {toast && (
+                        <div className="fixed top-5 right-5 z-50 animate-fade-in">
+                            <div className={`px-5 py-3 rounded-xl shadow-lg border flex items-center space-x-3 text-sm font-medium ${
+                                toast.type === 'success' ? 'bg-emerald-50 border-emerald-200 text-emerald-800' :
+                                toast.type === 'error' ? 'bg-rose-50 border-rose-200 text-rose-800' :
+                                'bg-indigo-50 border-indigo-200 text-indigo-800'
+                            }`}>
+                                <span>{toast.message}</span>
+                            </div>
+                        </div>
+                    )}
+
+                    <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+                            <div className="flex items-center space-x-3 cursor-pointer" onClick={() => setActiveTab('register')}>
+                                <div className="w-12 h-12 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-600 flex items-center justify-center text-white shadow-md font-extrabold text-xl">
+                                    MSF
+                                </div>
+                                <div>
+                                    <h1 className="text-xl font-bold tracking-tight text-slate-900 truncate max-w-xs sm:max-w-md">MSF Haritha</h1>
+                                    <p className="text-xs text-emerald-600 font-semibold tracking-wide uppercase">C.H. Anusmaranam Official Portal</p>
+                                </div>
+                            </div>
+                            
+                            <nav className="hidden md:flex items-center space-x-2">
+                                <button 
+                                    onClick={() => setActiveTab('register')}
+                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${activeTab === 'register' ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}`}
+                                >
+                                    Delegate Registration
+                                </button>
+                                <button 
+                                    onClick={() => setActiveTab('leaderboard')}
+                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${activeTab === 'leaderboard' ? 'bg-emerald-50 text-emerald-700 font-semibold' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'}`}
+                                >
+                                    <IconAward />
+                                    <span>Constituency Leaderboard</span>
+                                </button>
+                                <button 
+                                    onClick={handleShareSiteLink}
+                                    className="px-3.5 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 flex items-center space-x-1.5 border border-slate-200 transition-colors"
+                                    title="Share Official Link"
+                                >
+                                    <IconShare />
+                                    <span>Share Link</span>
+                                </button>
+                                <button 
+                                    onClick={() => setActiveTab('admin')}
+                                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center space-x-1.5 ${activeTab === 'admin' ? 'bg-emerald-600 text-white font-semibold shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200'}`}
+                                >
+                                    <IconShield />
+                                    <span>Admin Panel</span>
+                                </button>
+                            </nav>
+                        </div>
+                    </header>
+
+                    <div className="md:hidden bg-white border-b border-slate-200 px-4 py-2 flex justify-around text-xs font-medium text-slate-600">
+                        <button onClick={() => setActiveTab('register')} className={`py-1.5 px-3 rounded-md ${activeTab === 'register' ? 'bg-emerald-50 text-emerald-700 font-bold' : ''}`}>Register</button>
+                        <button onClick={() => setActiveTab('leaderboard')} className={`py-1.5 px-3 rounded-md ${activeTab === 'leaderboard' ? 'bg-emerald-50 text-emerald-700 font-bold' : ''}`}>Leaderboard</button>
+                        <button onClick={handleShareSiteLink} className="py-1.5 px-3 rounded-md text-emerald-600 font-semibold">Share</button>
+                        <button onClick={() => setActiveTab('admin')} className={`py-1.5 px-3 rounded-md ${activeTab === 'admin' ? 'bg-emerald-600 text-white font-bold' : ''}`}>Admin</button>
+                    </div>
+
+                    <main className="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        {activeTab === 'register' && <RegistrationSection eventConfig={eventConfig} registrations={registrations} setRegistrations={setRegistrations} customQuestions={customQuestions} photoConfig={photoConfig} showToast={showToast} />}
+                        {activeTab === 'leaderboard' && <LeaderboardSection registrations={registrations} />}
+                        {activeTab === 'admin' && <AdminSection eventConfig={eventConfig} setEventConfig={setEventConfig} registrations={registrations} setRegistrations={setRegistrations} customQuestions={customQuestions} setCustomQuestions={setCustomQuestions} photoConfig={photoConfig} setPhotoConfig={setPhotoConfig} authorizedAdmins={authorizedAdmins} setAuthorizedAdmins={setAuthorizedAdmins} enableNotifications={enableNotifications} setEnableNotifications={setEnableNotifications} showToast={showToast} />}
+                    </main>
+
+                    <footer className="bg-slate-900 text-slate-400 py-8 mt-auto border-t border-slate-800">
+                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between text-sm">
+                            <p>© 2026 MSF Haritha Kozhikode District Committee. All rights reserved.</p>
+                            <p className="mt-2 md:mt-0">Venue: {eventConfig.venue}</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        }
+
+        function RegistrationSection({ eventConfig, registrations, setRegistrations, customQuestions, photoConfig, showToast }) {
+            const [formData, setFormData] = useState({
+                fullName: '',
+                phone: '',
+                email: '',
+                panchayat: '',
+                constituency: '',
+                campusType: 'none',
+                campusName: '',
+                position: '',
+                photo: null
+            });
+
+            const [customAnswers, setCustomAnswers] = useState({});
+            const [otpState, setOtpState] = useState('idle');
+            const [generatedOtp, setGeneratedOtp] = useState('');
+            const [enteredOtp, setEnteredOtp] = useState('');
+            const [isSubmitting, setIsSubmitting] = useState(false);
+            const [successResult, setSuccessResult] = useState(null);
+
+            const handleInputChange = (e) => {
+                const { name, value } = e.target;
+                setFormData(prev => ({ ...prev, [name]: value }));
+            };
+
+            const handleCustomAnswerChange = (questionLabel, value) => {
+                setCustomAnswers(prev => ({ ...prev, [questionLabel]: value }));
+            };
+
+            const handlePhotoUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setFormData(prev => ({ ...prev, photo: reader.result }));
+                        showToast('Delegate photo uploaded successfully!', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const handleSendOtp = () => {
+                if (!formData.email || !formData.email.includes('@')) {
+                    showToast('Please enter a valid email address first.', 'error');
+                    return;
+                }
+                const randomOtp = Math.floor(100000 + Math.random() * 900000).toString();
+                setGeneratedOtp(randomOtp);
+                setOtpState('sent');
+                showToast(`[Simulated Email Sent] OTP to ${formData.email}: ${randomOtp}`, 'info');
+            };
+
+            const handleVerifyOtp = () => {
+                if (enteredOtp.trim() === generatedOtp) {
+                    setOtpState('verified');
+                    showToast('Email verified successfully!', 'success');
+                } else {
+                    showToast('Invalid OTP code. Please check and try again.', 'error');
+                }
+            };
+
+            const handleSubmitRegistration = (e) => {
+                e.preventDefault();
+                if (otpState !== 'verified') {
+                    showToast('Please verify your email with OTP before submitting.', 'error');
+                    return;
+                }
+                if (photoConfig === 'mandatory' && !formData.photo) {
+                    showToast('Registrant photo upload is required for this event.', 'error');
+                    return;
+                }
+
+                setIsSubmitting(true);
+                setTimeout(() => {
+                    const newRegId = 'REG-' + (5000 + registrations.length + 1);
+                    const finalCampus = formData.campusType === 'custom' ? formData.campusName : 'None';
+                    const newEntry = {
+                        id: newRegId,
+                        fullName: formData.fullName,
+                        phone: formData.phone,
+                        email: formData.email,
+                        panchayat: formData.panchayat,
+                        constituency: formData.constituency,
+                        campus: finalCampus,
+                        position: formData.position || 'Delegate',
+                        status: 'Pending',
+                        date: new Date().toISOString().split('T')[0],
+                        notificationSent: false,
+                        photo: photoConfig !== 'disabled' ? (formData.photo || null) : null,
+                        customAnswers: { ...customAnswers }
+                    };
+
+                    setRegistrations(prev => [newEntry, ...prev]);
+                    setIsSubmitting(false);
+                    setSuccessResult(newEntry);
+                    showToast('Registration submitted successfully! Pending admin approval.', 'success');
+                }, 600);
+            };
+
+            if (successResult) {
+                return (
+                    <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-xl border border-slate-100 p-8 text-center animate-fade-in my-8">
+                        <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <IconCheckCircle />
+                        </div>
+                        <h2 className="text-2xl font-bold text-slate-900 mb-2">Registration Submitted Successfully!</h2>
+                        <p className="text-slate-600 mb-6">Thank you for registering for {eventConfig.title}. Your details have been recorded and are currently <span className="font-semibold text-amber-600">Pending Admin Approval</span>.</p>
+                        
+                        <div className="bg-slate-50 rounded-xl p-6 text-left mb-6 border border-slate-200">
+                            <div className="flex items-center space-x-4 mb-4 pb-4 border-b border-slate-200">
+                                {successResult.photo ? (
+                                    <img src={successResult.photo} alt="Delegate" className="w-16 h-16 rounded-xl object-cover border border-slate-300 shadow-sm" />
+                                ) : (
+                                    <div className="w-16 h-16 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-lg">
+                                        {successResult.fullName.charAt(0)}
+                                    </div>
+                                )}
+                                <div>
+                                    <div className="text-xs text-emerald-600 font-semibold font-mono">{successResult.id}</div>
+                                    <div className="text-lg font-bold text-slate-900">{successResult.fullName}</div>
+                                    <div className="text-xs text-slate-500">{successResult.email} • {successResult.phone}</div>
+                                </div>
+                            </div>
+                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                <div><span className="text-slate-500">Constituency:</span> <span className="font-semibold text-slate-800">{successResult.constituency}</span></div>
+                                <div><span className="text-slate-500">Panchayat:</span> <span className="font-semibold text-slate-800">{successResult.panchayat}</span></div>
+                                <div><span className="text-slate-500">Campus:</span> <span className="font-semibold text-slate-800">{successResult.campus}</span></div>
+                                <div><span className="text-slate-500">Status:</span> <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-amber-100 text-amber-800">{successResult.status}</span></div>
+                                {Object.entries(successResult.customAnswers || {}).map(([k, v]) => (
+                                    <div key={k} className="col-span-2"><span className="text-slate-500">{k}:</span> <span className="font-semibold text-slate-800">{v}</span></div>
+                                ))}
+                            </div>
+                        </div>
+
+                        <button 
+                            onClick={() => {
+                                setSuccessResult(null);
+                                setFormData({ fullName: '', phone: '', email: '', panchayat: '', constituency: '', campusType: 'none', campusName: '', position: '', photo: null });
+                                setCustomAnswers({});
+                                setOtpState('idle');
+                                setEnteredOtp('');
+                            }}
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-6 py-2.5 rounded-xl transition-colors shadow-sm"
+                        >
+                            Register Another Delegate
+                        </button>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="space-y-8 animate-fade-in">
+                    <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-slate-900 text-white">
+                        <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/80 via-teal-900/60 to-transparent z-10"></div>
+                        <img 
+                            src={eventConfig.imageUrl} 
+                            alt="Event Banner" 
+                            className="w-full h-72 sm:h-96 object-cover opacity-90 transform hover:scale-105 transition-transform duration-1000"
+                            onError={(e)=>{e.target.src="https://placehold.co/1200x400/059669/ffffff?text=MSF+Haritha+Kozhikode"}}
+                        />
+                        <div className="absolute inset-0 z-20 flex flex-col justify-end p-6 sm:p-12 max-w-4xl">
+                            <span className="bg-emerald-500/40 text-emerald-100 border border-emerald-400/30 px-3 py-1 rounded-full text-xs font-semibold w-max mb-3 backdrop-blur-md">
+                                {eventConfig.subtitle}
+                            </span>
+                            <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight mb-2 drop-shadow-md">{eventConfig.title}</h1>
+                            <p className="text-slate-100 text-xs sm:text-sm leading-relaxed font-medium">
+                                Official Delegate Registration Portal • Venue: {eventConfig.venue}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-10 max-w-3xl mx-auto">
+                        <div className="mb-8 border-b border-slate-100 pb-4">
+                            <h2 className="text-xl font-bold text-slate-900">Delegate Registration Form</h2>
+                            <p className="text-sm text-slate-500">Please provide your precise personal and Kozhikode constituency details.</p>
+                        </div>
+
+                        <form onSubmit={handleSubmitRegistration} className="space-y-6">
+                            {photoConfig !== 'disabled' && (
+                                <div className="p-5 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-center gap-5">
+                                    <div className="w-20 h-20 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center overflow-hidden border border-slate-300 shadow-inner flex-shrink-0">
+                                        {formData.photo ? (
+                                            <img src={formData.photo} alt="Preview" className="w-full h-full object-cover" />
+                                        ) : (
+                                            <IconCamera />
+                                        )}
+                                    </div>
+                                    <div className="flex-grow text-center sm:text-left">
+                                        <label className="block text-sm font-semibold text-slate-800 mb-1">
+                                            Registrant Photo {photoConfig === 'mandatory' ? <span className="text-rose-600">* (Required)</span> : <span className="text-slate-400 font-normal">(Optional)</span>}
+                                        </label>
+                                        <p className="text-xs text-slate-500 mb-3">Upload a clear portrait photo for your delegate badge.</p>
+                                        <input 
+                                            type="file" 
+                                            accept="image/*"
+                                            required={photoConfig === 'mandatory'}
+                                            onChange={handlePhotoUpload}
+                                            className="text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer w-full sm:w-auto"
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Full Name *</label>
+                                    <input 
+                                        type="text" 
+                                        name="fullName" 
+                                        required 
+                                        value={formData.fullName} 
+                                        onChange={handleInputChange}
+                                        placeholder="Enter full name" 
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Phone Number *</label>
+                                    <input 
+                                        type="tel" 
+                                        name="phone" 
+                                        required 
+                                        value={formData.phone} 
+                                        onChange={handleInputChange}
+                                        placeholder="+91 98765 43210" 
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Email Address *</label>
+                                <div className="flex gap-3">
+                                    <input 
+                                        type="email" 
+                                        name="email" 
+                                        required 
+                                        disabled={otpState === 'verified'}
+                                        value={formData.email} 
+                                        onChange={handleInputChange}
+                                        placeholder="name@example.com" 
+                                        className="flex-grow px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm disabled:bg-slate-100"
+                                    />
+                                    {otpState !== 'verified' ? (
+                                        <button 
+                                            type="button" 
+                                            onClick={handleSendOtp}
+                                            className="bg-emerald-600 hover:bg-emerald-700 text-white font-medium px-5 py-2.5 rounded-xl text-sm transition-colors shadow-sm whitespace-nowrap"
+                                        >
+                                            {otpState === 'sent' ? 'Resend OTP' : 'Verify Email'}
+                                        </button>
+                                    ) : (
+                                        <div className="flex items-center space-x-1.5 px-4 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-sm font-semibold whitespace-nowrap">
+                                            <IconCheckCircle />
+                                            <span>Verified</span>
+                                        </div>
+                                    )}
+                                </div>
+                                {otpState === 'sent' && (
+                                    <div className="mt-3 p-4 bg-emerald-50 rounded-xl border border-emerald-100 flex flex-col sm:flex-row items-center gap-3 animate-fade-in">
+                                        <div className="text-xs text-emerald-800">
+                                            <span className="font-bold">Simulated OTP Sent!</span> Check toast notification for code.
+                                        </div>
+                                        <div className="flex gap-2 w-full sm:w-auto">
+                                            <input 
+                                                type="text" 
+                                                maxLength="6"
+                                                value={enteredOtp} 
+                                                onChange={(e) => setEnteredOtp(e.target.value)}
+                                                placeholder="Enter 6-digit OTP" 
+                                                className="px-3 py-1.5 rounded-lg border border-emerald-300 text-sm outline-none bg-white font-mono tracking-widest text-center"
+                                            />
+                                            <button 
+                                                type="button" 
+                                                onClick={handleVerifyOtp}
+                                                className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-medium px-4 py-2 rounded-lg"
+                                            >
+                                                Confirm OTP
+                                            </button>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Constituency (Kozhikode District) *</label>
+                                    <select 
+                                        name="constituency" 
+                                        required 
+                                        value={formData.constituency} 
+                                        onChange={handleInputChange}
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm bg-white"
+                                    >
+                                        <option value="">Select Kozhikode Constituency</option>
+                                        {CONSTITUENCIES.map(c => (
+                                            <option key={c} value={c}>{c}</option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Panchayat / Local Body *</label>
+                                    <input 
+                                        type="text" 
+                                        name="panchayat" 
+                                        required 
+                                        value={formData.panchayat} 
+                                        onChange={handleInputChange}
+                                        placeholder="e.g. Mavoor" 
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Campus Affiliation *</label>
+                                    <select 
+                                        name="campusType" 
+                                        value={formData.campusType} 
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            setFormData(prev => ({ ...prev, campusType: val, campusName: val === 'none' ? '' : prev.campusName }));
+                                        }}
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm bg-white"
+                                    >
+                                        <option value="none">None / Working Professional</option>
+                                        <option value="custom">Specify Campus / Institution</option>
+                                    </select>
+                                </div>
+                                {formData.campusType === 'custom' && (
+                                    <div className="animate-fade-in">
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1.5">Campus Name *</label>
+                                        <input 
+                                            type="text" 
+                                            name="campusName" 
+                                            required 
+                                            value={formData.campusName} 
+                                            onChange={handleInputChange}
+                                            placeholder="e.g. Farook College" 
+                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                        />
+                                    </div>
+                                )}
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Position Held (if any)</label>
+                                    <input 
+                                        type="text" 
+                                        name="position" 
+                                        value={formData.position} 
+                                        onChange={handleInputChange}
+                                        placeholder="e.g. President, Secretary" 
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none text-sm"
+                                    />
+                                </div>
+                            </div>
+
+                            {customQuestions && customQuestions.length > 0 && (
+                                <div className="pt-4 border-t border-slate-200 space-y-4">
+                                    <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Additional Event Questions</h3>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                                        {customQuestions.map((q) => {
+                                            const optionsList = q.type === 'dropdown' && q.options ? q.options.split(',').map(o => o.trim()).filter(Boolean) : [];
+                                            return (
+                                                <div key={q.id}>
+                                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">
+                                                        {q.label} {q.required && <span className="text-rose-600">*</span>}
+                                                    </label>
+                                                    {q.type === 'dropdown' ? (
+                                                        <select 
+                                                            required={q.required}
+                                                            value={customAnswers[q.label] || ''}
+                                                            onChange={(e) => handleCustomAnswerChange(q.label, e.target.value)}
+                                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white"
+                                                        >
+                                                            <option value="">Select an option</option>
+                                                            {optionsList.map(opt => (
+                                                                <option key={opt} value={opt}>{opt}</option>
+                                                            ))}
+                                                        </select>
+                                                    ) : (
+                                                        <input 
+                                                            type="text"
+                                                            required={q.required}
+                                                            value={customAnswers[q.label] || ''}
+                                                            onChange={(e) => handleCustomAnswerChange(q.label, e.target.value)}
+                                                            placeholder={`Enter ${q.label.toLowerCase()}`}
+                                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                                        />
+                                                    )}
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="pt-4 border-t border-slate-100 flex items-center justify-between">
+                                <p className="text-xs text-slate-500">
+                                    * All required fields must be filled.
+                                </p>
+                                <button 
+                                    type="submit" 
+                                    disabled={isSubmitting || otpState !== 'verified'}
+                                    className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white font-semibold px-8 py-3 rounded-xl transition-all shadow-md text-sm"
+                                >
+                                    {isSubmitting ? 'Submitting...' : 'Complete Registration'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            );
+        }
+
+        function LeaderboardSection({ registrations }) {
+            const approvedRegistrations = useMemo(() => {
+                return registrations.filter(r => r.status === 'Approved');
+            }, [registrations]);
+
+            const constituencyStats = useMemo(() => {
+                const counts = {};
+                approvedRegistrations.forEach(r => {
+                    counts[r.constituency] = (counts[r.constituency] || 0) + 1;
+                });
+
+                const list = CONSTITUENCIES.map(c => ({
+                    constituency: c,
+                    count: counts[c] || 0
+                }));
+
+                list.sort((a, b) => b.count - a.count);
+                return list;
+            }, [approvedRegistrations]);
+
+            const maxCount = constituencyStats.length > 0 ? Math.max(...constituencyStats.map(s => s.count), 1) : 1;
+
+            return (
+                <div className="max-w-4xl mx-auto space-y-8 animate-fade-in">
+                    <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-10">
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-slate-100 pb-6 mb-8 gap-4">
+                            <div>
+                                <h2 className="text-2xl font-bold text-slate-900 flex items-center gap-2">
+                                    <IconAward />
+                                    <span>Kozhikode Constituency Leaderboard</span>
+                                </h2>
+                                <p className="text-sm text-slate-500">Rankings based on approved delegate registrations per Kozhikode constituency.</p>
+                            </div>
+                            <div className="bg-emerald-50 border border-emerald-100 text-emerald-700 px-4 py-2 rounded-xl text-sm font-semibold self-start sm:self-auto">
+                                Total Approved Delegates: {approvedRegistrations.length}
+                            </div>
+                        </div>
+
+                        <div className="space-y-4">
+                            {constituencyStats.map((item, index) => {
+                                const percentage = Math.round((item.count / maxCount) * 100);
+                                const rank = index + 1;
+                                
+                                let badgeColor = 'bg-slate-100 text-slate-700 border-slate-200';
+                                if (rank === 1) badgeColor = 'bg-amber-100 text-amber-800 border-amber-300 font-bold';
+                                if (rank === 2) badgeColor = 'bg-slate-200 text-slate-800 border-slate-300 font-bold';
+                                if (rank === 3) badgeColor = 'bg-orange-100 text-orange-800 border-orange-300 font-bold';
+
+                                return (
+                                    <div key={item.constituency} className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 sm:p-5 transition-all hover:shadow-md">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <div className="flex items-center space-x-3">
+                                                <div className={`w-8 h-8 rounded-xl flex items-center justify-center text-sm border ${badgeColor}`}>
+                                                    #{rank}
+                                                </div>
+                                                <h3 className="font-bold text-slate-900 text-base">{item.constituency}</h3>
+                                            </div>
+                                            <div className="text-right">
+                                                <span className="text-lg font-extrabold text-emerald-600">{item.count}</span>
+                                                <span className="text-xs text-slate-500 ml-1">delegates</span>
+                                            </div>
+                                        </div>
+                                        <div className="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                                            <div 
+                                                className="bg-gradient-to-r from-emerald-500 to-teal-600 h-2.5 rounded-full transition-all duration-1000"
+                                                style={{ width: `${Math.max(percentage, 3)}%` }}
+                                            ></div>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+                </div>
+            );
+        }
+
+        function AdminSection({ eventConfig, setEventConfig, registrations, setRegistrations, customQuestions, setCustomQuestions, photoConfig, setPhotoConfig, authorizedAdmins, setAuthorizedAdmins, enableNotifications, setEnableNotifications, showToast }) {
+            const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(() => {
+                return localStorage.getItem('summit_admin_logged_in_2026') === 'true';
+            });
+            const [loginMode, setLoginMode] = useState(() => {
+                const trustedEmail = localStorage.getItem('summit_trusted_admin_email_2026');
+                return trustedEmail ? 'emailOnly' : 'full';
+            });
+
+            const [usernameInput, setUsernameInput] = useState('');
+            const [passwordInput, setPasswordInput] = useState('');
+            const [emailInput, setEmailInput] = useState(() => {
+                return localStorage.getItem('summit_trusted_admin_email_2026') || '';
+            });
+
+            const [loggedInEmail, setLoggedInEmail] = useState(() => {
+                return localStorage.getItem('summit_trusted_admin_email_2026') || '';
+            });
+
+            const isSuperAdmin = loggedInEmail.trim().toLowerCase() === 'muhammadnishan2006@gmail.com';
+
+            const [adminSubTab, setAdminSubTab] = useState('registrations');
+            const [headerForm, setHeaderForm] = useState(eventConfig);
+            const [newQuestion, setNewQuestion] = useState({ label: '', type: 'dropdown', options: '', required: false });
+            const [editingQuestionId, setEditingQuestionId] = useState(null);
+            const [editQuestionForm, setEditQuestionForm] = useState({ label: '', type: 'dropdown', options: '', required: false });
+
+            const [searchQuery, setSearchQuery] = useState('');
+            const [filterConstituency, setFilterConstituency] = useState('All');
+            const [filterStatus, setFilterStatus] = useState('All');
+            const [filterCampus, setFilterCampus] = useState('All');
+            const [newAdminEmailInput, setNewAdminEmailInput] = useState('');
+            const [selectedIds, setSelectedIds] = useState([]);
+
+            const handleLogin = (e) => {
+                e.preventDefault();
+                const emailClean = emailInput.trim().toLowerCase();
+
+                if (loginMode === 'emailOnly') {
+                    if (authorizedAdmins.map(a => a.toLowerCase()).includes(emailClean)) {
+                        setIsAdminLoggedIn(true);
+                        setLoggedInEmail(emailClean);
+                        localStorage.setItem('summit_admin_logged_in_2026', 'true');
+                        localStorage.setItem('summit_trusted_admin_email_2026', emailClean);
+                        showToast(`Welcome back, ${emailClean === 'muhammadnishan2006@gmail.com' ? 'Super Administrator' : 'Guest Admin'}!`, 'success');
+                    } else {
+                        showToast('Unrecognized admin email ID. Please log in with username and password.', 'error');
+                        setLoginMode('full');
+                    }
+                } else {
+                    if (usernameInput.trim() === 'nishanadmin' && passwordInput === '807511' && emailClean.includes('@')) {
+                        if (!authorizedAdmins.map(a => a.toLowerCase()).includes(emailClean)) {
+                            setAuthorizedAdmins(prev => [...prev, emailClean]);
+                        }
+                        setIsAdminLoggedIn(true);
+                        setLoggedInEmail(emailClean);
+                        localStorage.setItem('summit_admin_logged_in_2026', 'true');
+                        localStorage.setItem('summit_trusted_admin_email_2026', emailClean);
+                        showToast(`Admin login successful as ${emailClean === 'muhammadnishan2006@gmail.com' ? 'Super Administrator' : 'Guest Admin'}!`, 'success');
+                    } else {
+                        showToast('Invalid credentials. Username must be nishanadmin, password 807511, and valid email.', 'error');
+                    }
+                }
+            };
+
+            const handleLogout = () => {
+                setIsAdminLoggedIn(false);
+                setLoggedInEmail('');
+                localStorage.removeItem('summit_admin_logged_in_2026');
+                localStorage.removeItem('summit_trusted_admin_email_2026');
+                setUsernameInput('');
+                setPasswordInput('');
+                showToast('Logged out of admin panel.', 'info');
+            };
+
+            const handleAddAuthorizedAdmin = (e) => {
+                e.preventDefault();
+                const emailClean = newAdminEmailInput.trim().toLowerCase();
+                if (!emailClean || !emailClean.includes('@')) {
+                    showToast('Please enter a valid email address.', 'error');
+                    return;
+                }
+                if (authorizedAdmins.map(a => a.toLowerCase()).includes(emailClean)) {
+                    showToast('This email is already authorized as an admin.', 'info');
+                    return;
+                }
+                setAuthorizedAdmins(prev => [...prev, emailClean]);
+                setNewAdminEmailInput('');
+                showToast(`Admin access granted to ${emailClean}!`, 'success');
+            };
+
+            const handleRemoveAuthorizedAdmin = (emailToRemove) => {
+                if (authorizedAdmins.length <= 1) {
+                    showToast('You must keep at least one authorized admin email.', 'error');
+                    return;
+                }
+                setAuthorizedAdmins(prev => prev.filter(a => a.toLowerCase() !== emailToRemove.toLowerCase()));
+                showToast(`Admin access revoked for ${emailToRemove}.`, 'info');
+            };
+
+            const handleShareAdminLink = () => {
+                const adminUrl = window.location.href;
+                const shareText = `Access the MSF Haritha C.H. Anusmaranam Admin Panel at: ${adminUrl} (Use authorized admin email with password 807511).`;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(shareText).then(() => {
+                        showToast('Admin access link & info copied to clipboard!', 'success');
+                    }).catch(() => {
+                        showToast(shareText, 'info');
+                    });
+                } else {
+                    showToast(shareText, 'info');
+                }
+            };
+
+            const handleStatusChange = (id, newStatus) => {
+                setRegistrations(prev => prev.map(reg => {
+                    if (reg.id === id) {
+                        const updated = { ...reg, status: newStatus };
+                        if (newStatus === 'Approved') {
+                            updated.notificationSent = enableNotifications;
+                        }
+                        return updated;
+                    }
+                    return reg;
+                }));
+                showToast(`Registration ${id} updated to ${newStatus}${newStatus === 'Approved' && enableNotifications ? ' (Confirmation notification sent)' : ''}`, 'success');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const confirmDelete = (id) => {
+                setRegistrations(prev => prev.filter(reg => reg.id !== id));
+                setSelectedIds(prev => prev.filter(selectedId => selectedId !== id));
+                showToast(`Registration ${id} deleted successfully`, 'info');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const handleBatchStatusUpdate = (targetStatus, scope = 'selected') => {
+                const targetIds = scope === 'selected' ? selectedIds : filteredRegistrations.map(r => r.id);
+                if (targetIds.length === 0) {
+                    showToast('No registrations selected for batch update.', 'error');
+                    return;
+                }
+
+                setRegistrations(prev => prev.map(reg => {
+                    if (targetIds.includes(reg.id)) {
+                        return { ...reg, status: targetStatus, notificationSent: targetStatus === 'Approved' ? (enableNotifications ? true : reg.notificationSent) : reg.notificationSent };
+                    }
+                    return reg;
+                }));
+
+                if (targetStatus === 'Approved') {
+                    showToast(`Successfully approved ${targetIds.length} delegate(s) in batch! ${enableNotifications ? 'Notifications sent.' : ''}`, 'success');
+                } else {
+                    showToast(`Successfully updated ${targetIds.length} delegate(s) to ${targetStatus}.`, 'success');
+                }
+                setSelectedIds([]);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+
+            const handleSelectAll = (e) => {
+                if (e.target.checked) {
+                    setSelectedIds(filteredRegistrations.map(r => r.id));
+                } else {
+                    setSelectedIds([]);
+                }
+            };
+
+            const handleToggleSelectOne = (id) => {
+                setSelectedIds(prev => prev.includes(id) ? prev.filter(i => i !== id) : [...prev, id]);
+            };
+
+            const exportToCSV = () => {
+                const headers = ['ID', 'Full Name', 'Phone', 'Email', 'Constituency', 'Panchayat', 'Campus', 'Position', 'Status', 'Date'];
+                const rows = registrations.map(r => [r.id, r.fullName, r.phone, r.email, r.constituency, r.panchayat, r.campus, r.position, r.status, r.date]);
+                let csvContent = "data:text/csv;charset=utf-8," + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+                const encodedUri = encodeURI(csvContent);
+                const link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "MSF_Haritha_Delegates_2026.csv");
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                showToast('Delegate registrations exported to CSV successfully!', 'success');
+            };
+
+            const handleBulkFileUpload = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const fileName = file.name.toLowerCase();
+
+                if (fileName.endsWith('.xlsx') || fileName.endsWith('.xls') || fileName.endsWith('.csv')) {
+                    const reader = new FileReader();
+                    reader.onload = (evt) => {
+                        try {
+                            const data = new Uint8Array(evt.target.result);
+                            const workbook = XLSX.read(data, { type: 'array' });
+                            const firstSheetName = workbook.SheetNames[0];
+                            const worksheet = workbook.Sheets[firstSheetName];
+                            const json = XLSX.utils.sheet_to_json(worksheet);
+
+                            const newEntries = json.map((row, idx) => {
+                                const normalizedRow = {};
+                                Object.keys(row).forEach(k => {
+                                    normalizedRow[k.trim().toLowerCase()] = row[k];
+                                });
+
+                                const nameVal = normalizedRow['full name'] || normalizedRow['name'] || normalizedRow['delegate name'];
+                                const phoneVal = normalizedRow['phone number'] || normalizedRow['phone'] || normalizedRow['mobile'];
+                                const constVal = normalizedRow['constituency'] || normalizedRow['assembly'];
+                                const panchVal = normalizedRow['panchayat'] || normalizedRow['local body'];
+                                const campusVal = normalizedRow['campus'] || normalizedRow['college'];
+                                const posVal = normalizedRow['position'] || normalizedRow['designation'];
+
+                                const name = (nameVal !== undefined && nameVal !== null && String(nameVal).trim() !== '') ? String(nameVal).trim() : `Delegate ${idx + 1}`;
+                                const phone = (phoneVal !== undefined && phoneVal !== null) ? String(phoneVal).trim() : '';
+                                const constituency = (constVal !== undefined && constVal !== null) ? String(constVal).trim() : 'Kozhikode North';
+                                const panchayat = (panchVal !== undefined && panchVal !== null) ? String(panchVal).trim() : '';
+                                const campus = (campusVal !== undefined && campusVal !== null) ? String(campusVal).trim() : 'None';
+                                const position = (posVal !== undefined && posVal !== null) ? String(posVal).trim() : '';
+
+                                return {
+                                    id: 'BULK-' + (Date.now() + idx),
+                                    fullName: name,
+                                    phone: phone,
+                                    email: `delegate${idx + 1}@example.com`,
+                                    constituency: constituency,
+                                    panchayat: panchayat,
+                                    campus: campus,
+                                    position: position,
+                                    status: 'Approved',
+                                    date: new Date().toISOString().split('T')[0],
+                                    notificationSent: true,
+                                    photo: null,
+                                    customAnswers: {}
+                                };
+                            });
+
+                            setRegistrations(prev => [...newEntries, ...prev]);
+                            showToast(`Successfully imported ${newEntries.length} records with correct names!`, 'success');
+                        } catch (err) {
+                            showToast('Error parsing spreadsheet file.', 'error');
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                } else if (fileName.endsWith('.pdf')) {
+                    const reader = new FileReader();
+                    reader.onload = async (evt) => {
+                        try {
+                            const typedarray = new Uint8Array(evt.target.result);
+                            const pdf = await pdfjsLib.getDocument(typedarray).promise;
+                            let extractedText = '';
+                            for (let i = 1; i <= pdf.numPages; i++) {
+                                const page = await pdf.getPage(i);
+                                const textContent = await page.getTextContent();
+                                textContent.items.forEach(item => {
+                                    extractedText += item.str + ' ';
+                                });
+                            }
+                            showToast(`PDF parsed successfully! Extracted ${extractedText.length} characters.`, 'success');
+                        } catch (err) {
+                            showToast('Error reading PDF file.', 'error');
+                        }
+                    };
+                    reader.readAsArrayBuffer(file);
+                } else {
+                    showToast('Please upload a valid .xlsx, .csv, or .pdf file.', 'error');
+                }
+            };
+
+            const handleSaveHeader = (e) => {
+                e.preventDefault();
+                setEventConfig(headerForm);
+                showToast('Event header updated successfully!', 'success');
+            };
+
+            const handleImageFileUpload = (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        setHeaderForm(prev => ({ ...prev, imageUrl: reader.result }));
+                        showToast('Banner image uploaded successfully!', 'success');
+                    };
+                    reader.readAsDataURL(file);
+                }
+            };
+
+            const handleAddQuestion = (e) => {
+                e.preventDefault();
+                if (!newQuestion.label.trim()) return;
+                const newQObj = {
+                    id: 'cq_' + Date.now(),
+                    label: newQuestion.label.trim(),
+                    type: newQuestion.type,
+                    options: newQuestion.options.trim(),
+                    required: newQuestion.required
+                };
+                setCustomQuestions(prev => [...prev, newQObj]);
+                setNewQuestion({ label: '', type: 'dropdown', options: '', required: false });
+                showToast('Custom question added successfully!', 'success');
+            };
+
+            const handleDeleteQuestion = (id) => {
+                setCustomQuestions(prev => prev.filter(q => q.id !== id));
+                showToast('Custom question removed.', 'info');
+            };
+
+            const startEditQuestion = (q) => {
+                setEditingQuestionId(q.id);
+                setEditQuestionForm({ label: q.label, type: q.type, options: q.options || '', required: q.required });
+            };
+
+            const handleSaveEditedQuestion = (e) => {
+                e.preventDefault();
+                setCustomQuestions(prev => prev.map(q => q.id === editingQuestionId ? { ...q, ...editQuestionForm } : q));
+                setEditingQuestionId(null);
+                showToast('Custom question updated successfully!', 'success');
+            };
+
+            const filteredRegistrations = useMemo(() => {
+                return registrations.filter(r => {
+                    const matchesSearch = searchQuery === '' || 
+                        r.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        r.phone.includes(searchQuery) ||
+                        r.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        r.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                        r.panchayat.toLowerCase().includes(searchQuery.toLowerCase());
+                    
+                    const matchesConst = filterConstituency === 'All' || r.constituency === filterConstituency;
+                    const matchesStatus = filterStatus === 'All' || r.status === filterStatus;
+                    const matchesCampus = filterCampus === 'All' || 
+                        (filterCampus === 'None' && (!r.campus || r.campus === 'None' || r.campus === 'no' || r.campus === 'No' || r.campus === 'Nil' || r.campus === 'Nill')) ||
+                        (filterCampus === 'Custom' && r.campus && r.campus !== 'None' && r.campus !== 'no' && r.campus !== 'No' && r.campus !== 'Nil' && r.campus !== 'Nill');
+
+                    return matchesSearch && matchesConst && matchesStatus && matchesCampus;
+                });
+            }, [registrations, searchQuery, filterConstituency, filterStatus, filterCampus]);
+
+            const stats = useMemo(() => {
+                return {
+                    total: registrations.length,
+                    approved: registrations.filter(r => r.status === 'Approved').length,
+                    pending: registrations.filter(r => r.status === 'Pending').length,
+                    rejected: registrations.filter(r => r.status === 'Rejected').length
+                };
+            }, [registrations]);
+
+            if (!isAdminLoggedIn) {
+                return (
+                    <div className="max-w-md mx-auto bg-white rounded-3xl shadow-xl border border-slate-100 p-8 my-12 animate-fade-in">
+                        <div className="w-14 h-14 bg-emerald-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-emerald-600">
+                            <IconShield />
+                        </div>
+                        <h2 className="text-2xl font-bold text-slate-900 text-center mb-2">Admin Portal Login</h2>
+                        <p className="text-sm text-slate-500 text-center mb-6">
+                            {loginMode === 'emailOnly' ? 'Enter your trusted admin email ID to log in instantly.' : 'Enter username (nishanadmin) and your admin email ID.'}
+                        </p>
+                        
+                        <form onSubmit={handleLogin} className="space-y-4">
+                            {loginMode === 'full' && (
+                                <>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1.5">Username</label>
+                                        <input 
+                                            type="text" 
+                                            required 
+                                            value={usernameInput} 
+                                            onChange={(e) => setUsernameInput(e.target.value)}
+                                            placeholder="nishanadmin" 
+                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold text-slate-700 mb-1.5">Password</label>
+                                        <input 
+                                            type="password" 
+                                            required 
+                                            value={passwordInput} 
+                                            onChange={(e) => setPasswordInput(e.target.value)}
+                                            placeholder="Enter password" 
+                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                        />
+                                    </div>
+                                </>
+                            )}
+                            <div>
+                                <label className="block text-sm font-semibold text-slate-700 mb-1.5">Admin Email ID</label>
+                                <input 
+                                    type="email" 
+                                    required 
+                                    value={emailInput} 
+                                    onChange={(e) => setEmailInput(e.target.value)}
+                                    placeholder="admin@example.com" 
+                                    className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                />
+                            </div>
+                            <button 
+                                type="submit" 
+                                className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition-colors shadow-md text-sm"
+                            >
+                                Login to Dashboard
+                            </button>
+                            {loginMode === 'emailOnly' && (
+                                <div className="text-center pt-2">
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setLoginMode('full')} 
+                                        className="text-xs text-emerald-600 hover:underline font-medium"
+                                    >
+                                        Log in with Username & Password instead
+                                    </button>
+                                </div>
+                            )}
+                        </form>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="space-y-8 animate-fade-in">
+                    <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                        <div>
+                            <div className="flex items-center space-x-2 text-emerald-600 text-xs font-bold uppercase tracking-wider mb-1">
+                                <IconShield />
+                                <span>{isSuperAdmin ? 'Super Administrator (muhammadnishan2006@gmail.com)' : `Guest Admin (${loggedInEmail})`}</span>
+                            </div>
+                            <h2 className="text-2xl font-bold text-slate-900">Summit Management Dashboard</h2>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-3">
+                            <button 
+                                onClick={() => setAdminSubTab('registrations')}
+                                className={`px-4 py-2.5 rounded-xl text-sm font-medium flex items-center space-x-2 transition-colors ${adminSubTab === 'registrations' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+                            >
+                                <IconUser />
+                                <span>Registrations</span>
+                            </button>
+                            {isSuperAdmin && (
+                                <>
+                                    <button 
+                                        onClick={() => setAdminSubTab('bulkImport')}
+                                        className={`px-4 py-2.5 rounded-xl text-sm font-medium flex items-center space-x-2 transition-colors ${adminSubTab === 'bulkImport' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+                                    >
+                                        <IconUpload />
+                                        <span>Bulk Excel/PDF Import</span>
+                                    </button>
+                                    <button 
+                                        onClick={() => setAdminSubTab('headerEditor')}
+                                        className={`px-4 py-2.5 rounded-xl text-sm font-medium flex items-center space-x-2 transition-colors ${adminSubTab === 'headerEditor' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+                                    >
+                                        <IconEdit />
+                                        <span>Edit Header</span>
+                                    </button>
+                                    <button 
+                                        onClick={() => setAdminSubTab('formBuilder')}
+                                        className={`px-4 py-2.5 rounded-xl text-sm font-medium flex items-center space-x-2 transition-colors ${adminSubTab === 'formBuilder' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+                                    >
+                                        <IconPlus />
+                                        <span>Form & Photo</span>
+                                    </button>
+                                    <button 
+                                        onClick={() => setAdminSubTab('accessControl')}
+                                        className={`px-4 py-2.5 rounded-xl text-sm font-medium flex items-center space-x-2 transition-colors ${adminSubTab === 'accessControl' ? 'bg-emerald-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200'}`}
+                                    >
+                                        <IconShare />
+                                        <span>Admin Access</span>
+                                    </button>
+                                </>
+                            )}
+                            <button 
+                                onClick={exportToCSV}
+                                className="bg-teal-600 hover:bg-teal-700 text-white font-medium px-4 py-2.5 rounded-xl text-sm flex items-center space-x-2 shadow-sm transition-colors"
+                            >
+                                <IconDownload />
+                                <span>Export CSV</span>
+                            </button>
+                            <button 
+                                onClick={handleLogout}
+                                className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-4 py-2.5 rounded-xl text-sm flex items-center space-x-2 transition-colors"
+                            >
+                                <IconLogOut />
+                                <span>Logout</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    {adminSubTab === 'accessControl' && isSuperAdmin ? (
+                        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-10 max-w-3xl mx-auto animate-fade-in space-y-6">
+                            <div className="border-b border-slate-100 pb-4">
+                                <h3 className="text-xl font-bold text-slate-900">Admin Access Control</h3>
+                                <p className="text-sm text-slate-500">Grant or revoke Guest Admin access for committee members (e.g. muslimyouthleagueclt@gmail.com).</p>
+                            </div>
+
+                            <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div>
+                                    <h4 className="font-bold text-slate-900 text-sm mb-1">Share Admin Panel Link</h4>
+                                    <p className="text-xs text-slate-600">Share this portal link with authorized committee members so they can log into the admin dashboard.</p>
+                                </div>
+                                <button 
+                                    onClick={handleShareAdminLink}
+                                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-colors whitespace-nowrap flex items-center space-x-2"
+                                >
+                                    <IconShare />
+                                    <span>Copy Admin Access Link</span>
+                                </button>
+                            </div>
+
+                            <div className="space-y-4">
+                                <h4 className="font-bold text-slate-900 text-sm">Authorized Admin Emails</h4>
+                                <div className="space-y-2">
+                                    {authorizedAdmins.map((adminEmail) => (
+                                        <div key={adminEmail} className="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm">
+                                            <span className="font-medium text-slate-800">{adminEmail} {adminEmail.toLowerCase() === 'muhammadnishan2006@gmail.com' && '(Super Admin)'} {adminEmail.toLowerCase() === 'muslimyouthleagueclt@gmail.com' && '(Guest Admin)'}</span>
+                                            {adminEmail.toLowerCase() !== 'muhammadnishan2006@gmail.com' && (
+                                                <button 
+                                                    onClick={() => handleRemoveAuthorizedAdmin(adminEmail)}
+                                                    className="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg transition-colors text-xs font-semibold"
+                                                    title="Revoke Admin Access"
+                                                >
+                                                    Revoke Access
+                                                </button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <form onSubmit={handleAddAuthorizedAdmin} className="pt-4 flex gap-3">
+                                    <input 
+                                        type="email" 
+                                        required
+                                        value={newAdminEmailInput}
+                                        onChange={(e) => setNewAdminEmailInput(e.target.value)}
+                                        placeholder="colleague@example.com" 
+                                        className="flex-grow px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white"
+                                    />
+                                    <button 
+                                        type="submit" 
+                                        className="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-6 py-2.5 rounded-xl shadow-sm transition-colors whitespace-nowrap"
+                                    >
+                                        Grant Admin Access
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    ) : adminSubTab === 'bulkImport' && isSuperAdmin ? (
+                        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-10 max-w-3xl mx-auto animate-fade-in space-y-6">
+                            <div className="border-b border-slate-100 pb-4">
+                                <h3 className="text-xl font-bold text-slate-900">Bulk Excel, CSV, or PDF Registration Import</h3>
+                                <p className="text-sm text-slate-500">Upload your delegate spreadsheet (e.g. delagate detailes.xlsx). Names and details will be imported accurately without fallback names.</p>
+                            </div>
+
+                            <div className="p-8 bg-emerald-50/50 rounded-2xl border-2 border-dashed border-emerald-200 text-center space-y-4">
+                                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                                    <IconUpload />
+                                </div>
+                                <div>
+                                    <h4 className="font-bold text-slate-900 text-base mb-1">Select Excel (.xlsx/.xls), CSV, or PDF File</h4>
+                                    <p className="text-xs text-slate-500 mb-4">Supports exact column mapping for delegate full names, phone numbers, constituencies, and campuses</p>
+                                    <input 
+                                        type="file" 
+                                        accept=".xlsx, .xls, .csv, .pdf"
+                                        onChange={handleBulkFileUpload}
+                                        className="text-xs text-slate-700 file:mr-4 file:py-2.5 file:px-5 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    ) : adminSubTab === 'headerEditor' && isSuperAdmin ? (
+                        <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-10 max-w-3xl mx-auto animate-fade-in">
+                            <div className="mb-6 border-b border-slate-100 pb-4">
+                                <h3 className="text-xl font-bold text-slate-900">Edit Event Header & Details</h3>
+                                <p className="text-sm text-slate-500">Update the event title, banner image, time, and venue instantly across the public portal.</p>
+                            </div>
+
+                            <form onSubmit={handleSaveHeader} className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Event Title *</label>
+                                    <input 
+                                        type="text" 
+                                        required 
+                                        value={headerForm.title} 
+                                        onChange={(e) => setHeaderForm(prev => ({ ...prev, title: e.target.value }))}
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Event Subtitle / Date Info *</label>
+                                    <input 
+                                        type="text" 
+                                        required 
+                                        value={headerForm.subtitle} 
+                                        onChange={(e) => setHeaderForm(prev => ({ ...prev, subtitle: e.target.value }))}
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Venue *</label>
+                                    <input 
+                                        type="text" 
+                                        required 
+                                        value={headerForm.venue} 
+                                        onChange={(e) => setHeaderForm(prev => ({ ...prev, venue: e.target.value }))}
+                                        className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-700 mb-1.5">Banner Image (URL or Upload from Device) *</label>
+                                    <div className="space-y-3">
+                                        <input 
+                                            type="url" 
+                                            required 
+                                            value={headerForm.imageUrl} 
+                                            onChange={(e) => setHeaderForm(prev => ({ ...prev, imageUrl: e.target.value }))}
+                                            placeholder="https://..." 
+                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                        />
+                                        <div className="flex items-center space-x-3">
+                                            <span className="text-xs font-semibold text-slate-500 uppercase">Or upload banner image file:</span>
+                                            <input 
+                                                type="file" 
+                                                accept="image/*"
+                                                onChange={handleImageFileUpload}
+                                                className="text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-emerald-50 file:text-emerald-700 hover:file:bg-emerald-100 cursor-pointer"
+                                            />
+                                        </div>
+                                    </div>
+                                    {headerForm.imageUrl && (
+                                        <div className="mt-3 rounded-xl overflow-hidden h-36 border border-slate-200">
+                                            <img src={headerForm.imageUrl} alt="Banner Preview" className="w-full h-full object-cover" onError={(e)=>{e.target.src="https://placehold.co/600x200/059669/ffffff?text=Image+Preview"}} />
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="pt-4 border-t border-slate-100 flex justify-end space-x-3">
+                                    <button 
+                                        type="button" 
+                                        onClick={() => setHeaderForm(eventConfig)}
+                                        className="px-5 py-2.5 rounded-xl text-sm font-medium bg-slate-100 text-slate-700 hover:bg-slate-200"
+                                    >
+                                        Reset
+                                    </button>
+                                    <button 
+                                        type="submit" 
+                                        className="px-6 py-2.5 rounded-xl text-sm font-semibold bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+                                    >
+                                        Save Event Changes
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    ) : adminSubTab === 'formBuilder' && isSuperAdmin ? (
+                        <div className="max-w-3xl mx-auto space-y-6 animate-fade-in">
+                            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8">
+                                <h3 className="text-lg font-bold text-slate-900 mb-1">Approval Notification Message</h3>
+                                <p className="text-sm text-slate-500 mb-4">Enable or disable automated email and SMS confirmation messages sent during the approval process.</p>
+                                <div className="flex gap-3">
+                                    <button 
+                                        type="button"
+                                        onClick={() => { setEnableNotifications(true); showToast('Approval confirmation notifications enabled.', 'success'); }}
+                                        className={`py-3 px-6 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${enableNotifications ? 'bg-emerald-600 text-white border-emerald-600 shadow-md' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'}`}
+                                    >
+                                        Enabled
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        onClick={() => { setEnableNotifications(false); showToast('Approval confirmation notifications disabled.', 'info'); }}
+                                        className={`py-3 px-6 rounded-xl text-xs sm:text-sm font-semibold border transition-all {!enableNotifications ? 'bg-slate-700 text-white border-slate-700 shadow-md' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'}`}
+                                    >
+                                        Disabled
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8">
+                                <h3 className="text-lg font-bold text-slate-900 mb-1">Registrant Photo Upload Option</h3>
+                                <p className="text-sm text-slate-500 mb-4">Choose whether to disable, allow optionally, or require registrant photo upload.</p>
+                                <div className="grid grid-cols-3 gap-3">
+                                    <button 
+                                        type="button"
+                                        onClick={() => { setPhotoConfig('disabled'); showToast('Photo upload option removed entirely.', 'info'); }}
+                                        className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${photoConfig === 'disabled' ? 'bg-rose-600 text-white border-rose-600 shadow-md' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'}`}
+                                    >
+                                        Disabled (Remove Option)
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        onClick={() => { setPhotoConfig('optional'); showToast('Photo upload set to optional.', 'success'); }}
+                                        className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${photoConfig === 'optional' ? 'bg-emerald-600 text-white border-emerald-600 shadow-md' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'}`}
+                                    >
+                                        Optional
+                                    </button>
+                                    <button 
+                                        type="button"
+                                        onClick={() => { setPhotoConfig('mandatory'); showToast('Photo upload set to mandatory.', 'success'); }}
+                                        className={`py-3 px-4 rounded-xl text-xs sm:text-sm font-semibold border transition-all ${photoConfig === 'mandatory' ? 'bg-emerald-600 text-white border-emerald-600 shadow-md' : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'}`}
+                                    >
+                                        Mandatory (Required)
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 sm:p-8">
+                                <div className="mb-6 border-b border-slate-100 pb-4">
+                                    <h3 className="text-xl font-bold text-slate-900">Custom Registration Questions</h3>
+                                    <p className="text-sm text-slate-500">Add, edit, or remove custom questions to collect tailored details from delegates.</p>
+                                </div>
+
+                                <div className="space-y-4 mb-8">
+                                    {customQuestions.length === 0 ? (
+                                        <p className="text-sm text-slate-500 italic">No custom questions added yet.</p>
+                                    ) : (
+                                        customQuestions.map((q) => (
+                                            <div key={q.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                                                {editingQuestionId === q.id ? (
+                                                    <form onSubmit={handleSaveEditedQuestion} className="w-full space-y-3">
+                                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                                                            <input 
+                                                                type="text" 
+                                                                required
+                                                                value={editQuestionForm.label}
+                                                                onChange={(e) => setEditQuestionForm(prev => ({ ...prev, label: e.target.value }))}
+                                                                className="px-3 py-1.5 rounded-lg border border-slate-300 text-sm bg-white"
+                                                            />
+                                                            <select 
+                                                                value={editQuestionForm.type}
+                                                                onChange={(e) => setEditQuestionForm(prev => ({ ...prev, type: e.target.value }))}
+                                                                className="px-3 py-1.5 rounded-lg border border-slate-300 text-sm bg-white"
+                                                            >
+                                                                <option value="dropdown">Dropdown Select</option>
+                                                                <option value="text">Text Input</option>
+                                                            </select>
+                                                        </div>
+                                                        {editQuestionForm.type === 'dropdown' && (
+                                                            <input 
+                                                                type="text" 
+                                                                value={editQuestionForm.options}
+                                                                onChange={(e) => setEditQuestionForm(prev => ({ ...prev, options: e.target.value }))}
+                                                                placeholder="Options comma separated" 
+                                                                className="w-full px-3 py-1.5 rounded-lg border border-slate-300 text-sm bg-white"
+                                                            />
+                                                        )}
+                                                        <div className="flex items-center justify-between">
+                                                            <label className="flex items-center space-x-2 text-xs font-semibold text-slate-700">
+                                                                <input 
+                                                                    type="checkbox" 
+                                                                    checked={editQuestionForm.required}
+                                                                    onChange={(e) => setEditQuestionForm(prev => ({ ...prev, required: e.target.checked }))}
+                                                                    className="rounded border-slate-300 text-emerald-600 w-4 h-4"
+                                                                />
+                                                                <span>Required</span>
+                                                            </label>
+                                                            <div className="space-x-2">
+                                                                <button type="button" onClick={() => setEditingQuestionId(null)} className="px-3 py-1 bg-slate-200 text-slate-700 text-xs rounded-lg font-medium">Cancel</button>
+                                                                <button type="submit" className="px-3 py-1 bg-emerald-600 text-white text-xs rounded-lg font-semibold">Save</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                ) : (
+                                                    <>
+                                                        <div>
+                                                            <div className="flex items-center space-x-2">
+                                                                <span className="font-bold text-slate-900 text-sm">{q.label}</span>
+                                                                {q.required && <span className="text-[10px] bg-rose-100 text-rose-800 px-2 py-0.5 rounded-full font-bold">Required</span>}
+                                                                <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold uppercase">{q.type}</span>
+                                                            </div>
+                                                            {q.type === 'dropdown' && q.options && (
+                                                                <div className="text-xs text-slate-500 mt-1">Options: {q.options}</div>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex items-center space-x-2">
+                                                            <button 
+                                                                onClick={() => startEditQuestion(q)}
+                                                                className="text-slate-400 hover:text-emerald-600 p-2 rounded-xl transition-colors"
+                                                                title="Edit Question"
+                                                            >
+                                                                <IconEdit />
+                                                            </button>
+                                                            <button 
+                                                                onClick={() => handleDeleteQuestion(q.id)}
+                                                                className="text-slate-400 hover:text-rose-600 p-2 rounded-xl transition-colors"
+                                                                title="Delete Question"
+                                                            >
+                                                                <IconTrash />
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+
+                                <form onSubmit={handleAddQuestion} className="bg-slate-50 p-6 rounded-2xl border border-slate-200 space-y-4">
+                                    <h4 className="font-bold text-slate-900 text-sm">Add New Question</h4>
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                        <div>
+                                            <label className="block text-xs font-semibold text-slate-700 mb-1">Question Label *</label>
+                                            <input 
+                                                type="text" 
+                                                required
+                                                value={newQuestion.label}
+                                                onChange={(e) => setNewQuestion(prev => ({ ...prev, label: e.target.value }))}
+                                                placeholder="e.g. T-Shirt Size" 
+                                                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm outline-none bg-white"
+                                            />
+                                        </div>
+                                        <div>
+                                            <label className="block text-xs font-semibold text-slate-700 mb-1">Question Type *</label>
+                                            <select 
+                                                value={newQuestion.type}
+                                                onChange={(e) => setNewQuestion(prev => ({ ...prev, type: e.target.value }))}
+                                                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm outline-none bg-white"
+                                            >
+                                                <option value="dropdown">Dropdown Select</option>
+                                                <option value="text">Text Input</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    {newQuestion.type === 'dropdown' && (
+                                        <div>
+                                            <label className="block text-xs font-semibold text-slate-700 mb-1">Dropdown Options (Comma separated)</label>
+                                            <input 
+                                                type="text" 
+                                                value={newQuestion.options}
+                                                onChange={(e) => setNewQuestion(prev => ({ ...prev, options: e.target.value }))}
+                                                placeholder="e.g. S, M, L, XL" 
+                                                className="w-full px-3 py-2 rounded-xl border border-slate-300 text-sm outline-none bg-white"
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="flex items-center justify-between pt-2">
+                                        <label className="flex items-center space-x-2 text-xs font-semibold text-slate-700 cursor-pointer">
+                                            <input 
+                                                type="checkbox" 
+                                                checked={newQuestion.required}
+                                                onChange={(e) => setNewQuestion(prev => ({ ...prev, required: e.target.checked }))}
+                                                className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4"
+                                            />
+                                            <span>Mark as Required Question</span>
+                                        </label>
+                                        <button 
+                                            type="submit" 
+                                            className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold px-5 py-2.5 rounded-xl shadow-sm transition-colors"
+                                        >
+                                            Add Question
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                                <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm">
+                                    <p className="text-xs font-semibold text-slate-500 uppercase">Total Registrations</p>
+                                    <p className="text-3xl font-extrabold text-slate-900 mt-2">{stats.total}</p>
+                                </div>
+                                <div className="bg-white rounded-2xl p-5 border border-emerald-100 shadow-sm bg-gradient-to-br from-white to-emerald-50/30">
+                                    <p className="text-xs font-semibold text-emerald-700 uppercase">Approved</p>
+                                    <p className="text-3xl font-extrabold text-emerald-600 mt-2">{stats.approved}</p>
+                                </div>
+                                <div className="bg-white rounded-2xl p-5 border border-amber-100 shadow-sm bg-gradient-to-br from-white to-amber-50/30">
+                                    <p className="text-xs font-semibold text-amber-700 uppercase">Pending Review</p>
+                                    <p className="text-3xl font-extrabold text-amber-600 mt-2">{stats.pending}</p>
+                                </div>
+                                <div className="bg-white rounded-2xl p-5 border border-rose-100 shadow-sm bg-gradient-to-br from-white to-rose-50/30">
+                                    <p className="text-xs font-semibold text-rose-700 uppercase">Rejected</p>
+                                    <p className="text-3xl font-extrabold text-rose-600 mt-2">{stats.rejected}</p>
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 p-6 space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                    <div className="relative md:col-span-1">
+                                        <span className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                                            <IconSearch />
+                                        </span>
+                                        <input 
+                                            type="text" 
+                                            value={searchQuery} 
+                                            onChange={(e) => setSearchQuery(e.target.value)}
+                                            placeholder="Search name, phone, email..." 
+                                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm"
+                                        />
+                                    </div>
+                                    <div>
+                                        <select 
+                                            value={filterConstituency} 
+                                            onChange={(e) => setFilterConstituency(e.target.value)}
+                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white"
+                                        >
+                                            <option value="All">All Kozhikode Constituencies</option>
+                                            {CONSTITUENCIES.map(c => <option key={c} value={c}>{c}</option>)}
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select 
+                                            value={filterStatus} 
+                                            onChange={(e) => setFilterStatus(e.target.value)}
+                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white"
+                                        >
+                                            <option value="All">All Statuses</option>
+                                            <option value="Approved">Approved</option>
+                                            <option value="Pending">Pending</option>
+                                            <option value="Rejected">Rejected</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <select 
+                                            value={filterCampus} 
+                                            onChange={(e) => setFilterCampus(e.target.value)}
+                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-300 focus:ring-2 focus:ring-emerald-500 outline-none text-sm bg-white"
+                                        >
+                                            <option value="All">All Campuses</option>
+                                            <option value="None">No Campus (None)</option>
+                                            <option value="Custom">With Campus</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+                                    <div className="flex items-center space-x-2 text-xs font-semibold text-slate-700">
+                                        <span>Selected: <strong className="text-emerald-600">{selectedIds.length}</strong> of {filteredRegistrations.length} shown</span>
+                                    </div>
+                                    <div className="flex flex-wrap items-center gap-2">
+                                        <button 
+                                            disabled={selectedIds.length === 0}
+                                            onClick={() => handleBatchStatusUpdate('Approved', 'selected')}
+                                            className="bg-emerald-600 hover:bg-emerald-700 disabled:bg-slate-300 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition-colors"
+                                        >
+                                            Approve Selected ({selectedIds.length})
+                                        </button>
+                                        <button 
+                                            disabled={selectedIds.length === 0}
+                                            onClick={() => handleBatchStatusUpdate('Rejected', 'selected')}
+                                            className="bg-rose-600 hover:bg-rose-700 disabled:bg-slate-300 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition-colors"
+                                        >
+                                            Reject Selected ({selectedIds.length})
+                                        </button>
+                                        <div className="h-4 w-px bg-slate-300 mx-1"></div>
+                                        <button 
+                                            disabled={filteredRegistrations.length === 0}
+                                            onClick={() => handleBatchStatusUpdate('Approved', 'filtered')}
+                                            className="bg-teal-600 hover:bg-teal-700 disabled:bg-slate-300 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition-colors"
+                                        >
+                                            Approve All Filtered ({filteredRegistrations.length})
+                                        </button>
+                                        <button 
+                                            disabled={filteredRegistrations.length === 0}
+                                            onClick={() => handleBatchStatusUpdate('Rejected', 'filtered')}
+                                            className="bg-slate-700 hover:bg-slate-800 disabled:bg-slate-300 text-white text-xs font-semibold px-4 py-2 rounded-xl shadow-sm transition-colors"
+                                        >
+                                            Reject All Filtered ({filteredRegistrations.length})
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="bg-white rounded-3xl shadow-xl border border-slate-100 overflow-hidden">
+                                <div className="overflow-x-auto">
+                                    <table className="w-full text-left border-collapse">
+                                        <thead>
+                                            <tr className="bg-slate-50 border-b border-slate-200 text-xs font-bold text-slate-600 uppercase tracking-wider">
+                                                <th className="py-4 px-4 w-12 text-center">
+                                                    <input 
+                                                        type="checkbox"
+                                                        checked={filteredRegistrations.length > 0 && selectedIds.length === filteredRegistrations.length}
+                                                        onChange={handleSelectAll}
+                                                        className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                                                    />
+                                                </th>
+                                                <th className="py-4 px-6">Delegate Info</th>
+                                                <th className="py-4 px-6">Constituency / Panchayat</th>
+                                                <th className="py-4 px-6">Campus</th>
+                                                <th className="py-4 px-6">Position</th>
+                                                <th className="py-4 px-6">Status</th>
+                                                <th className="py-4 px-6 text-right">Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="divide-y divide-slate-100 text-sm">
+                                            {filteredRegistrations.length === 0 ? (
+                                                <tr>
+                                                    <td colSpan="7" className="text-center py-12 text-slate-500">
+                                                        No registrations match your search criteria.
+                                                    </td>
+                                                </tr>
+                                            ) : (
+                                                filteredRegistrations.map(reg => {
+                                                    const isSelected = selectedIds.includes(reg.id);
+                                                    return (
+                                                        <tr key={reg.id} className={`hover:bg-slate-50/60 transition-colors ${isSelected ? 'bg-emerald-50/40' : ''}`}>
+                                                            <td className="py-4 px-4 text-center">
+                                                                <input 
+                                                                    type="checkbox"
+                                                                    checked={isSelected}
+                                                                    onChange={() => handleToggleSelectOne(reg.id)}
+                                                                    className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 w-4 h-4 cursor-pointer"
+                                                                />
+                                                            </td>
+                                                            <td className="py-4 px-6">
+                                                                <div className="flex items-center space-x-3">
+                                                                    {reg.photo ? (
+                                                                        <img src={reg.photo} alt="Delegate" className="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-sm flex-shrink-0" />
+                                                                    ) : (
+                                                                        <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-sm flex-shrink-0">
+                                                                            {reg.fullName.charAt(0)}
+                                                                        </div>
+                                                                    )}
+                                                                    <div>
+                                                                        <div className="font-bold text-slate-900">{reg.fullName}</div>
+                                                                        <div className="text-xs text-slate-500">{reg.email} • {reg.phone}</div>
+                                                                        <div className="text-[10px] text-emerald-600 font-mono mt-0.5">{reg.id}</div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td className="py-4 px-6">
+                                                                <div className="font-semibold text-slate-800">{reg.constituency}</div>
+                                                                <div className="text-xs text-slate-500">{reg.panchayat}</div>
+                                                            </td>
+                                                            <td className="py-4 px-6">
+                                                                <div className="text-slate-700">{reg.campus}</div>
+                                                            </td>
+                                                            <td className="py-4 px-6">
+                                                                <div className="text-slate-700">{reg.position}</div>
+                                                            </td>
+                                                            <td className="py-4 px-6">
+                                                                <span className={`px-2.5 py-1 rounded-full text-xs font-bold flex items-center w-max gap-1 ${
+                                                                    reg.status === 'Approved' ? 'bg-emerald-100 text-emerald-800' :
+                                                                    reg.status === 'Rejected' ? 'bg-rose-100 text-rose-800' :
+                                                                    'bg-amber-100 text-amber-800'
+                                                                }`}>
+                                                                    {reg.status}
+                                                                    {reg.status === 'Approved' && <span className="text-[10px] bg-emerald-200 px-1.5 py-0.5 rounded text-emerald-900 font-mono">Notified</span>}
+                                                                </span>
+                                                            </td>
+                                                            <td className="py-4 px-6 text-right space-x-2">
+                                                                {reg.status !== 'Approved' && (
+                                                                    <button 
+                                                                        onClick={() => handleStatusChange(reg.id, 'Approved')}
+                                                                        className="bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-semibold px-3 py-1.5 rounded-lg text-xs transition-colors"
+                                                                    >
+                                                                        Approve
+                                                                    </button>
+                                                                )}
+                                                                {reg.status !== 'Rejected' && (
+                                                                    <button 
+                                                                        onClick={() => handleStatusChange(reg.id, 'Rejected')}
+                                                                        className="bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold px-3 py-1.5 rounded-lg text-xs transition-colors"
+                                                                    >
+                                                                        Reject
+                                                                    </button>
+                                                                )}
+                                                                <button 
+                                                                    onClick={() => confirmDelete(reg.id)}
+                                                                    className="text-slate-400 hover:text-rose-600 font-semibold px-2 py-1.5 rounded-lg text-xs transition-colors"
+                                                                    title="Delete Registration"
+                                                                >
+                                                                    Delete
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </>
+                    )}
+                </div>
+            );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
